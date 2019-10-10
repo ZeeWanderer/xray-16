@@ -41,6 +41,15 @@ struct _matrix
     using SelfCRef = const Self&;
     using Tvector = _vector3<T>;
 
+    template<typename OStream>
+    ICF friend OStream& operator<<(OStream& os, const _matrix<T>& dop)
+    {
+        return os << dop.i.x << "," << dop.i.y << "," << dop.i.z << "," << dop._14_ << "\n"
+                  << dop.j.x << "," << dop.j.y << "," << dop.j.z << "," << dop._24_ << "\n"
+                  << dop.k.x << "," << dop.k.y << "," << dop.k.z << "," << dop._34_ << "\n"
+                  << dop.c.x << "," << dop.c.y << "," << dop.c.z << "," << dop._44_;
+    }
+
     union
     {
         struct // Direct definition

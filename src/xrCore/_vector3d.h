@@ -7,6 +7,7 @@
 #include "_types.h"
 #include "_random.h"
 #include "math_constants.h"
+//#include "spdlog/fmt/ostr.h"
 
 template <class T>
 struct _vector3
@@ -21,6 +22,12 @@ struct _vector3
     // access operators
     ICF T& operator[](size_t i) { return *((T*)this + i); }
     ICF T& operator[](size_t i) const { return *((T*)this + i); }
+
+    template<typename OStream>
+    ICF friend OStream& operator<<(OStream& os, const _vector3<T>& dop)
+    {
+        return os << dop.x << "," << dop.y << "," << dop.z;
+    }
 
     ICF SelfRef set(T _x, T _y, T _z) noexcept
     {

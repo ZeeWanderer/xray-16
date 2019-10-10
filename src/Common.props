@@ -98,6 +98,7 @@
         $(ProjectDir);
         $(xrSdkDir)include;
         $(xrSdkDir)DXSDK/Include;
+        $(xrExternals)spdlog\include;
         $(xrExternals)luajit\src;
         $(xrExternals)luabind;
         $(xrExternals)GameSpy\src;
@@ -123,6 +124,7 @@
         _CRT_SECURE_NO_WARNINGS;
 	      _CRT_SECURE_NO_DEPRECATE;
 	      USE_TBB_PARALLEL;
+        SPDLOG_COMPILED_LIB;
         %(PreprocessorDefinitions)
       </PreprocessorDefinitions>
       <FloatingPointModel>Fast</FloatingPointModel>
