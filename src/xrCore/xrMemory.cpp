@@ -13,7 +13,7 @@
 // XXX: fix xrMemory_align on Linux
 // and enable it
 #ifdef WINDOWS
-#define USE_XR_ALIGNED_MALLOC
+#define USE_MIMALLOC
 #endif
 
 // Define this if you want to use TBB allocator
@@ -26,6 +26,13 @@ constexpr size_t xr_default_alignment = 16;
 #define xr_internal_malloc(size) xr_aligned_malloc(size, xr_default_alignment)
 #define xr_internal_realloc(ptr, size) xr_aligned_realloc(ptr, size, xr_default_alignment)
 #define xr_internal_free(ptr) xr_aligned_free(ptr)
+#elif defined(USE_MIMALLOC)
+#include <mimalloc.h>
+constexpr size_t xr_default_alignment = 16;
+
+#define xr_internal_malloc(size) mi_malloc_aligned(size, xr_default_alignment)
+#define xr_internal_realloc(ptr, size) mi_realloc_aligned(ptr, size, xr_default_alignment)
+#define xr_internal_free(ptr) mi_free(ptr)
 #elif defined(USE_TBB_MALLOC)
 #include <tbb/scalable_allocator.h>
 
@@ -169,8 +176,12 @@ void xrMemory::mem_free(void* ptr)
 XRCORE_API pstr xr_strdup(pcstr string)
 {
     VERIFY(string);
+#if defined(USE_MIMALLOC)
+    return mi_strdup(string);
+#else
     size_t len = xr_strlen(string) + 1;
     char* memory = (char*)xr_malloc(len);
     CopyMemory(memory, string, len);
     return memory;
+#endif
 }
